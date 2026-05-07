@@ -23,7 +23,7 @@ CONFIG_PATH = ROOT / "terrain_config.json"
 CATALOG_PATH= ROOT / "lots_catalog.json"
 PLACEMENTS_PATH = ROOT / "lot_placements.json"
 TILES = 64                   # lot grid (64×64 lots, zone map, road coords)
-TERRAIN_VERTS = TILES * 4 + 1  # 257 — SC4 small city at 4 m/vertex (1024m / 4m + 1)
+TERRAIN_VERTS = TILES + 1   # 65 — SC4 small city: one vertex per lot corner (16m/vertex)
 
 
 def load_config() -> dict:
