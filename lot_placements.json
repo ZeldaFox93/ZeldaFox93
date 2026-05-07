@@ -1,0 +1,2174 @@
+{
+  "total": 241,
+  "lots": [
+    {
+      "id": "BATIMENT-01",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 41,
+      "ty": 23
+    },
+    {
+      "id": "BATIMENT-02",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 39,
+      "ty": 16
+    },
+    {
+      "id": "BATIMENT-03",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 33,
+      "ty": 12
+    },
+    {
+      "id": "BATIMENT-04",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 27,
+      "ty": 12
+    },
+    {
+      "id": "BATIMENT-05",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 21,
+      "ty": 16
+    },
+    {
+      "id": "BATIMENT-06",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 19,
+      "ty": 23
+    },
+    {
+      "id": "BATIMENT-07",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 21,
+      "ty": 30
+    },
+    {
+      "id": "BATIMENT-08",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 27,
+      "ty": 34
+    },
+    {
+      "id": "BATIMENT-09",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 33,
+      "ty": 34
+    },
+    {
+      "id": "BATIMENT-10",
+      "name": "Immeuble 15 étages",
+      "category": "urban_building",
+      "w": 5,
+      "h": 5,
+      "tx": 39,
+      "ty": 30
+    },
+    {
+      "id": "CINEMA-01",
+      "name": "Cinéma",
+      "category": "commercial",
+      "w": 4,
+      "h": 4,
+      "tx": 17,
+      "ty": 3
+    },
+    {
+      "id": "DISCOTHEQUE-01",
+      "name": "Discothèque",
+      "category": "commercial",
+      "w": 3,
+      "h": 3,
+      "tx": 21,
+      "ty": 3
+    },
+    {
+      "id": "BARTABAC-01",
+      "name": "Bar tabac",
+      "category": "commercial",
+      "w": 2,
+      "h": 2,
+      "tx": 24,
+      "ty": 3
+    },
+    {
+      "id": "GAMING-01",
+      "name": "Salle de gaming",
+      "category": "commercial",
+      "w": 2,
+      "h": 2,
+      "tx": 26,
+      "ty": 3
+    },
+    {
+      "id": "BOULANGERIE-01",
+      "name": "Boulangerie",
+      "category": "commercial",
+      "w": 2,
+      "h": 2,
+      "tx": 28,
+      "ty": 3
+    },
+    {
+      "id": "RUE-COMMERCANTE-01",
+      "name": "Magasins vêtements",
+      "category": "commercial",
+      "w": 3,
+      "h": 3,
+      "tx": 30,
+      "ty": 3
+    },
+    {
+      "id": "RUE-COMMERCANTE-02",
+      "name": "Magasins meubles",
+      "category": "commercial",
+      "w": 3,
+      "h": 3,
+      "tx": 33,
+      "ty": 3
+    },
+    {
+      "id": "RUE-COMMERCANTE-03",
+      "name": "Magasins électroménager",
+      "category": "commercial",
+      "w": 3,
+      "h": 3,
+      "tx": 36,
+      "ty": 3
+    },
+    {
+      "id": "POLICE-01",
+      "name": "Poste de police",
+      "category": "service",
+      "w": 3,
+      "h": 3,
+      "tx": 17,
+      "ty": 12
+    },
+    {
+      "id": "POMPIERS-01",
+      "name": "Caserne pompiers",
+      "category": "service",
+      "w": 3,
+      "h": 3,
+      "tx": 20,
+      "ty": 12
+    },
+    {
+      "id": "HOPITAL-01",
+      "name": "Hôpital",
+      "category": "service",
+      "w": 4,
+      "h": 4,
+      "tx": 23,
+      "ty": 12
+    },
+    {
+      "id": "MAIRIE-01",
+      "name": "Mairie",
+      "category": "service",
+      "w": 3,
+      "h": 3,
+      "tx": 38,
+      "ty": 12
+    },
+    {
+      "id": "ANIMALERIE-01",
+      "name": "Animalerie/Vétérinaire",
+      "category": "service",
+      "w": 2,
+      "h": 2,
+      "tx": 41,
+      "ty": 12
+    },
+    {
+      "id": "MATERNELLE-01",
+      "name": "Maternelle",
+      "category": "education",
+      "w": 3,
+      "h": 3,
+      "tx": 0,
+      "ty": 3
+    },
+    {
+      "id": "ECOLE-PRIMAIRE-01",
+      "name": "École primaire",
+      "category": "education",
+      "w": 4,
+      "h": 4,
+      "tx": 3,
+      "ty": 3
+    },
+    {
+      "id": "COLLEGE-01",
+      "name": "Collège",
+      "category": "education",
+      "w": 4,
+      "h": 4,
+      "tx": 7,
+      "ty": 3
+    },
+    {
+      "id": "LYCEE-01",
+      "name": "Lycée",
+      "category": "education",
+      "w": 5,
+      "h": 5,
+      "tx": 11,
+      "ty": 3
+    },
+    {
+      "id": "STADE-FOOT-01",
+      "name": "Stade football",
+      "category": "sports",
+      "w": 5,
+      "h": 5,
+      "tx": 0,
+      "ty": 21
+    },
+    {
+      "id": "RUGBY-01",
+      "name": "Terrain rugby",
+      "category": "sports",
+      "w": 4,
+      "h": 4,
+      "tx": 5,
+      "ty": 21
+    },
+    {
+      "id": "TENNIS-01",
+      "name": "Terrain tennis",
+      "category": "sports",
+      "w": 3,
+      "h": 3,
+      "tx": 9,
+      "ty": 21
+    },
+    {
+      "id": "PISCINE-01",
+      "name": "Piscine + vestiaires",
+      "category": "sports",
+      "w": 3,
+      "h": 3,
+      "tx": 12,
+      "ty": 21
+    },
+    {
+      "id": "EGLISE-01",
+      "name": "Église",
+      "category": "special",
+      "w": 3,
+      "h": 3,
+      "tx": 0,
+      "ty": 31
+    },
+    {
+      "id": "PARC-01",
+      "name": "Parc",
+      "category": "special",
+      "w": 6,
+      "h": 6,
+      "tx": 3,
+      "ty": 31
+    },
+    {
+      "id": "GARE-01",
+      "name": "Gare",
+      "category": "special",
+      "w": 3,
+      "h": 3,
+      "tx": 9,
+      "ty": 31
+    },
+    {
+      "id": "GARAGE-01",
+      "name": "Garage/mécanique",
+      "category": "special",
+      "w": 3,
+      "h": 3,
+      "tx": 12,
+      "ty": 31
+    },
+    {
+      "id": "PLAGE-01",
+      "name": "Plage",
+      "category": "beach",
+      "w": 6,
+      "h": 4,
+      "tx": 0,
+      "ty": 50
+    },
+    {
+      "id": "VESTIAIRES-PLAGE-01",
+      "name": "Vestiaires/douches plage",
+      "category": "beach",
+      "w": 2,
+      "h": 2,
+      "tx": 6,
+      "ty": 50
+    },
+    {
+      "id": "FORET-01",
+      "name": "Forêt",
+      "category": "forest",
+      "w": 8,
+      "h": 6,
+      "tx": 46,
+      "ty": 0
+    },
+    {
+      "id": "ECURIE-01",
+      "name": "Écurie/stabulation",
+      "category": "forest",
+      "w": 3,
+      "h": 3,
+      "tx": 54,
+      "ty": 0
+    },
+    {
+      "id": "PISTE-EQUITATION-01",
+      "name": "Piste équitation",
+      "category": "forest",
+      "w": 4,
+      "h": 4,
+      "tx": 57,
+      "ty": 0
+    },
+    {
+      "id": "PONT",
+      "name": "Pont (deux zones)",
+      "category": "bridge",
+      "w": 2,
+      "h": 1,
+      "tx": 32,
+      "ty": 42
+    },
+    {
+      "id": "MAISON-001",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 0,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-002",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 2,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-003",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 4,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-004",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 6,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-005",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 8,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-006",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 10,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-007",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 12,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-008",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 14,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-009",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 16,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-010",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 18,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-011",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 20,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-012",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 22,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-013",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 24,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-014",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 26,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-015",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 28,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-016",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 30,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-017",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 32,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-018",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 34,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-019",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 36,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-020",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 38,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-021",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 40,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-022",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 42,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-023",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 44,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-024",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 46,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-025",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 48,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-026",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 50,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-027",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 52,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-028",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 54,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-029",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 56,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-030",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 58,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-031",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 60,
+      "ty": 39
+    },
+    {
+      "id": "MAISON-032",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 0,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-033",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 2,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-034",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 4,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-035",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 6,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-036",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 8,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-037",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 10,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-038",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 12,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-039",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 14,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-040",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 16,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-041",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 18,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-042",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 20,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-043",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 22,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-044",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 24,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-045",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 26,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-046",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 28,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-047",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 30,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-048",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 34,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-049",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 36,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-050",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 38,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-051",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 40,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-052",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 42,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-053",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 44,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-054",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 46,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-055",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 48,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-056",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 50,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-057",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 52,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-058",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 54,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-059",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 56,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-060",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 58,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-061",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 60,
+      "ty": 41
+    },
+    {
+      "id": "MAISON-062",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 0,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-063",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 2,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-064",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 4,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-065",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 6,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-066",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 8,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-067",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 10,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-068",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 12,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-069",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 14,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-070",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 16,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-071",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 18,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-072",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 20,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-073",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 22,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-074",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 24,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-075",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 26,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-076",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 28,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-077",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 30,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-078",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 32,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-079",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 34,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-080",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 36,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-081",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 38,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-082",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 40,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-083",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 42,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-084",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 44,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-085",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 46,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-086",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 48,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-087",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 50,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-088",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 52,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-089",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 54,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-090",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 56,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-091",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 58,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-092",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 60,
+      "ty": 43
+    },
+    {
+      "id": "MAISON-093",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 0,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-094",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 2,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-095",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 4,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-096",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 6,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-097",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 8,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-098",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 10,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-099",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 12,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-100",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 14,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-101",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 16,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-102",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 18,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-103",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 20,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-104",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 22,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-105",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 24,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-106",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 26,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-107",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 28,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-108",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 30,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-109",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 32,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-110",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 34,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-111",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 36,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-112",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 38,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-113",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 40,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-114",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 42,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-115",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 44,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-116",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 46,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-117",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 48,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-118",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 50,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-119",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 52,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-120",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 54,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-121",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 56,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-122",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 58,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-123",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 60,
+      "ty": 45
+    },
+    {
+      "id": "MAISON-124",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 0,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-125",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 2,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-126",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 4,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-127",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 6,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-128",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 8,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-129",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 10,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-130",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 12,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-131",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 14,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-132",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 16,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-133",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 18,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-134",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 20,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-135",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 22,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-136",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 24,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-137",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 26,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-138",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 28,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-139",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 30,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-140",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 32,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-141",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 34,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-142",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 36,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-143",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 38,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-144",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 40,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-145",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 42,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-146",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 44,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-147",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 46,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-148",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 48,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-149",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 50,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-150",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 52,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-151",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 54,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-152",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 56,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-153",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 58,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-154",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 60,
+      "ty": 47
+    },
+    {
+      "id": "MAISON-155",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 0,
+      "ty": 34
+    },
+    {
+      "id": "MAISON-156",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 9,
+      "ty": 34
+    },
+    {
+      "id": "MAISON-157",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 11,
+      "ty": 34
+    },
+    {
+      "id": "MAISON-158",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 0,
+      "ty": 36
+    },
+    {
+      "id": "MAISON-159",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 9,
+      "ty": 36
+    },
+    {
+      "id": "MAISON-160",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 11,
+      "ty": 36
+    },
+    {
+      "id": "MAISON-161",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 17,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-162",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 19,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-163",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 21,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-164",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 23,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-165",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 25,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-166",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 27,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-167",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 29,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-168",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 31,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-169",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 33,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-170",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 35,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-171",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 37,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-172",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 39,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-173",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 41,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-174",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 43,
+      "ty": 28
+    },
+    {
+      "id": "MAISON-175",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 17,
+      "ty": 30
+    },
+    {
+      "id": "MAISON-176",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 19,
+      "ty": 30
+    },
+    {
+      "id": "MAISON-177",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 26,
+      "ty": 30
+    },
+    {
+      "id": "MAISON-178",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 28,
+      "ty": 30
+    },
+    {
+      "id": "MAISON-179",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 30,
+      "ty": 30
+    },
+    {
+      "id": "MAISON-180",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 32,
+      "ty": 30
+    },
+    {
+      "id": "MAISON-181",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 34,
+      "ty": 30
+    },
+    {
+      "id": "MAISON-182",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 36,
+      "ty": 30
+    },
+    {
+      "id": "MAISON-183",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 17,
+      "ty": 32
+    },
+    {
+      "id": "MAISON-184",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 19,
+      "ty": 32
+    },
+    {
+      "id": "MAISON-185",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 26,
+      "ty": 32
+    },
+    {
+      "id": "MAISON-186",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 28,
+      "ty": 32
+    },
+    {
+      "id": "MAISON-187",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 30,
+      "ty": 32
+    },
+    {
+      "id": "MAISON-188",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 32,
+      "ty": 32
+    },
+    {
+      "id": "MAISON-189",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 34,
+      "ty": 32
+    },
+    {
+      "id": "MAISON-190",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 36,
+      "ty": 32
+    },
+    {
+      "id": "MAISON-191",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 17,
+      "ty": 34
+    },
+    {
+      "id": "MAISON-192",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 19,
+      "ty": 34
+    },
+    {
+      "id": "MAISON-193",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 0,
+      "ty": 0
+    },
+    {
+      "id": "MAISON-194",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 2,
+      "ty": 0
+    },
+    {
+      "id": "MAISON-195",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 4,
+      "ty": 0
+    },
+    {
+      "id": "MAISON-196",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 6,
+      "ty": 0
+    },
+    {
+      "id": "MAISON-197",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 8,
+      "ty": 0
+    },
+    {
+      "id": "MAISON-198",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 10,
+      "ty": 0
+    },
+    {
+      "id": "MAISON-199",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 12,
+      "ty": 0
+    },
+    {
+      "id": "MAISON-200",
+      "name": "Maison individuelle",
+      "category": "residential",
+      "w": 2,
+      "h": 2,
+      "tx": 14,
+      "ty": 0
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "lots": [
+    {"id": "BATIMENT-01", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+    {"id": "BATIMENT-02", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+    {"id": "BATIMENT-03", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+    {"id": "BATIMENT-04", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+    {"id": "BATIMENT-05", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+    {"id": "BATIMENT-06", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+    {"id": "BATIMENT-07", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+    {"id": "BATIMENT-08", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+    {"id": "BATIMENT-09", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+    {"id": "BATIMENT-10", "name": "Immeuble 15 étages", "category": "urban_building", "w": 5, "h": 5},
+
+    {"id": "CINEMA-01",          "name": "Cinéma",                    "category": "commercial", "w": 4, "h": 4},
+    {"id": "DISCOTHEQUE-01",     "name": "Discothèque",               "category": "commercial", "w": 3, "h": 3},
+    {"id": "BARTABAC-01",        "name": "Bar tabac",                 "category": "commercial", "w": 2, "h": 2},
+    {"id": "GAMING-01",          "name": "Salle de gaming",           "category": "commercial", "w": 2, "h": 2},
+    {"id": "BOULANGERIE-01",     "name": "Boulangerie",               "category": "commercial", "w": 2, "h": 2},
+    {"id": "RUE-COMMERCANTE-01", "name": "Magasins vêtements",        "category": "commercial", "w": 3, "h": 3},
+    {"id": "RUE-COMMERCANTE-02", "name": "Magasins meubles",          "category": "commercial", "w": 3, "h": 3},
+    {"id": "RUE-COMMERCANTE-03", "name": "Magasins électroménager",   "category": "commercial", "w": 3, "h": 3},
+
+    {"id": "POLICE-01",    "name": "Poste de police",       "category": "service", "w": 3, "h": 3},
+    {"id": "POMPIERS-01",  "name": "Caserne pompiers",      "category": "service", "w": 3, "h": 3},
+    {"id": "HOPITAL-01",   "name": "Hôpital",               "category": "service", "w": 4, "h": 4},
+    {"id": "MAIRIE-01",    "name": "Mairie",                "category": "service", "w": 3, "h": 3},
+    {"id": "ANIMALERIE-01","name": "Animalerie/Vétérinaire","category": "service", "w": 2, "h": 2},
+
+    {"id": "STADE-FOOT-01","name": "Stade football",       "category": "sports", "w": 5, "h": 5},
+    {"id": "RUGBY-01",     "name": "Terrain rugby",        "category": "sports", "w": 4, "h": 4},
+    {"id": "TENNIS-01",    "name": "Terrain tennis",       "category": "sports", "w": 3, "h": 3},
+    {"id": "PISCINE-01",   "name": "Piscine + vestiaires", "category": "sports", "w": 3, "h": 3},
+
+    {"id": "MATERNELLE-01",    "name": "Maternelle",     "category": "education", "w": 3, "h": 3},
+    {"id": "ECOLE-PRIMAIRE-01","name": "École primaire", "category": "education", "w": 4, "h": 4},
+    {"id": "COLLEGE-01",       "name": "Collège",        "category": "education", "w": 4, "h": 4},
+    {"id": "LYCEE-01",         "name": "Lycée",          "category": "education", "w": 5, "h": 5},
+
+    {"id": "PLAGE-01",          "name": "Plage",                    "category": "beach", "w": 6, "h": 4},
+    {"id": "VESTIAIRES-PLAGE-01","name": "Vestiaires/douches plage","category": "beach", "w": 2, "h": 2},
+
+    {"id": "FORET-01",          "name": "Forêt",          "category": "forest", "w": 8, "h": 6},
+    {"id": "ECURIE-01",         "name": "Écurie/stabulation","category": "forest","w": 3, "h": 3},
+    {"id": "PISTE-EQUITATION-01","name": "Piste équitation","category": "forest", "w": 4, "h": 4},
+
+    {"id": "MAISON", "name": "Maison individuelle", "category": "residential", "w": 2, "h": 2, "count": 200},
+
+    {"id": "EGLISE-01", "name": "Église",            "category": "special", "w": 3, "h": 3},
+    {"id": "PARC-01",   "name": "Parc",              "category": "special", "w": 6, "h": 6},
+    {"id": "GARE-01",   "name": "Gare",              "category": "special", "w": 3, "h": 3},
+    {"id": "GARAGE-01", "name": "Garage/mécanique",  "category": "special", "w": 3, "h": 3},
+    {"id": "PONT",      "name": "Pont (deux zones)",  "category": "bridge",  "w": 2, "h": 1}
+  ]
+}

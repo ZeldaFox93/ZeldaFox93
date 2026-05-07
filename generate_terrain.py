@@ -3,11 +3,12 @@
 Generate a SimCity 4 terrain file (.sc4) and preview PNG for Sims 2 import.
 
 The .sc4 file contains three sections only:
-  HMAP  – 64×64 uint16 heightmap (terrain shape, no structures)
-  ROAD  – road segments + roundabout + bridge (infrastructure only)
+  HMAP  – 64×64 uint16 heightmap  (terrain shape, no structures)
+  ROAD  – road segments + roundabout + bridge
   ZONE  – 64×64 uint8 zone-type grid (empty lot-slot designations only)
 
-No buildings, no objects, no lot contents.
+Lot positions are saved to lot_placements.json for reference.
+No buildings, no objects, no lot contents are stored.
 """
 
 import json
@@ -16,78 +17,252 @@ import struct
 import zlib
 from pathlib import Path
 
-CONFIG_PATH = Path(__file__).parent / "terrain_config.json"
-TILES = 64  # SC4 terrain resolution
+ROOT        = Path(__file__).parent
+CONFIG_PATH = ROOT / "terrain_config.json"
+CATALOG_PATH= ROOT / "lots_catalog.json"
+PLACEMENTS_PATH = ROOT / "lot_placements.json"
+TILES = 64
 
 
 def load_config() -> dict:
     with open(CONFIG_PATH) as f:
         return json.load(f)
 
+def load_catalog() -> dict:
+    with open(CATALOG_PATH) as f:
+        return json.load(f)
+
 
 # ---------------------------------------------------------------------------
-# Zone type constants (match terrain_config.json zone_types)
+# Zone type codes
 # ---------------------------------------------------------------------------
 Z_EMPTY    = 0x00
-Z_RES_LOW  = 0x01
-Z_RES_MED  = 0x02
+Z_RES      = 0x01
+Z_COMM     = 0x03
+Z_SVC      = 0x04
+Z_SPORT    = 0x05
+Z_EDU      = 0x06
+Z_URBAN    = 0x07
+Z_SPECIAL  = 0x08
+Z_BEACH_F  = 0x09
+Z_FOREST_F = 0x0A
 Z_ROAD     = 0x10
+Z_BRIDGE   = 0x11
 Z_BEACH    = 0x20
 Z_FOREST   = 0x30
 
+CATEGORY_CODE = {
+    "urban_building": Z_URBAN,
+    "commercial":     Z_COMM,
+    "service":        Z_SVC,
+    "sports":         Z_SPORT,
+    "education":      Z_EDU,
+    "residential":    Z_RES,
+    "special":        Z_SPECIAL,
+    "beach":          Z_BEACH_F,
+    "forest":         Z_FOREST_F,
+    "bridge":         Z_BRIDGE,
+}
+
 
 # ---------------------------------------------------------------------------
-# Heightmap (HMAP section)  —  values in [0, 65535]
+# Lot catalog expansion
+# ---------------------------------------------------------------------------
+
+def expand_catalog(catalog: dict) -> list[dict]:
+    """Expand count-based entries (MAISON×200) into individual lot records."""
+    lots = []
+    for entry in catalog["lots"]:
+        count = entry.get("count", 1)
+        for i in range(1, count + 1):
+            lot = dict(entry)
+            lot.pop("count", None)
+            if count > 1:
+                lot["id"] = f"{entry['id']}-{i:03d}"
+            lots.append(lot)
+    return lots
+
+
+# ---------------------------------------------------------------------------
+# Lot placement
+# ---------------------------------------------------------------------------
+
+def _can_place(occupied: set, tx: int, ty: int, w: int, h: int) -> bool:
+    if tx + w > TILES or ty + h > TILES:
+        return False
+    return all((tx + dx, ty + dy) not in occupied
+               for dy in range(h) for dx in range(w))
+
+
+def _mark(occupied: set, tx: int, ty: int, w: int, h: int) -> None:
+    for dy in range(h):
+        for dx in range(w):
+            occupied.add((tx + dx, ty + dy))
+
+
+def place_urban_buildings(ring_cfg: dict, urban_lots: list[dict],
+                          occupied: set) -> list[dict]:
+    placed = []
+    positions = ring_cfg["positions"]
+    for lot, (tx, ty) in zip(urban_lots, positions):
+        w, h = lot["w"], lot["h"]
+        if _can_place(occupied, tx, ty, w, h):
+            _mark(occupied, tx, ty, w, h)
+            placed.append({**lot, "tx": tx, "ty": ty})
+        else:
+            print(f"  [WARN] {lot['id']} blocked at ({tx},{ty}), skipping")
+    return placed
+
+
+def pack_zone(lots: list[dict], zone: dict, occupied: set) -> list[dict]:
+    """Left-to-right, top-to-bottom greedy packer within a rectangle.
+    Cursor persists between lots so the zone fills sequentially."""
+    placed = []
+    x, y   = zone["x1"], zone["y1"]
+    x2, y2 = zone["x2"], zone["y2"]
+
+    for lot in lots:
+        w, h = lot["w"], lot["h"]
+        placed_this = False
+        # Scan forward from current cursor position
+        scan_x, scan_y = x, y
+        while scan_y + h <= y2:
+            if scan_x + w > x2:
+                scan_x  = zone["x1"]
+                scan_y += h
+                continue
+            if _can_place(occupied, scan_x, scan_y, w, h):
+                _mark(occupied, scan_x, scan_y, w, h)
+                placed.append({**lot, "tx": scan_x, "ty": scan_y})
+                x, y = scan_x + w, scan_y
+                placed_this = True
+                break
+            scan_x += 1
+
+        if not placed_this:
+            print(f"  [WARN] No space for {lot['id']} in zone {zone}")
+
+    return placed
+
+
+def place_all_lots(cfg: dict, all_lots: list[dict]) -> list[dict]:
+    occupied: set = set()
+    placed_all: list[dict] = []
+
+    by_cat: dict[str, list] = {}
+    for lot in all_lots:
+        by_cat.setdefault(lot["category"], []).append(lot)
+
+    # 1. Urban buildings — ring placement
+    ring_placed = place_urban_buildings(
+        cfg["urban_ring"],
+        by_cat.get("urban_building", []),
+        occupied,
+    )
+    placed_all.extend(ring_placed)
+    print(f"  urban_building : {len(ring_placed)} lots placed")
+
+    # 2. All single-zone categories
+    single_zones = ["commercial", "service", "education", "sports",
+                    "special", "beach", "forest"]
+    for cat in single_zones:
+        zone_key = cat
+        if zone_key not in cfg["placement_zones"]:
+            continue
+        zone = cfg["placement_zones"][zone_key]
+        lots = by_cat.get(cat, [])
+        p = pack_zone(lots, zone, occupied)
+        placed_all.extend(p)
+        print(f"  {cat:<16}: {len(p)}/{len(lots)} lots placed")
+
+    # 3. Bridge — midpoint of the bridge road segment
+    bridge_lots = by_cat.get("bridge", [])
+    br = cfg["roads"]["bridge"]
+    mid_x = (br["from"][0] + br["to"][0]) // 2
+    mid_y = (br["from"][1] + br["to"][1]) // 2
+    for lot in bridge_lots:
+        placed_this = False
+        for tx, ty in [(mid_x, mid_y), (mid_x - 1, mid_y),
+                       (mid_x, mid_y + 1), (mid_x - 1, mid_y + 1)]:
+            if _can_place(occupied, tx, ty, lot["w"], lot["h"]):
+                _mark(occupied, tx, ty, lot["w"], lot["h"])
+                placed_all.append({**lot, "tx": tx, "ty": ty})
+                print(f"  bridge         : {lot['id']} at ({tx},{ty})")
+                placed_this = True
+                break
+        if not placed_this:
+            print(f"  [WARN] PONT could not be placed near bridge midpoint ({mid_x},{mid_y})")
+
+    # 4. Residential — multiple zones, fill up to count
+    res_zones = cfg["placement_zones"]["residential"]
+    res_lots  = list(by_cat.get("residential", []))  # 200 houses
+    total_placed = 0
+    for zone in res_zones:
+        if not res_lots:
+            break
+        p = pack_zone(res_lots, zone, occupied)
+        placed_all.extend(p)
+        placed_ids = {lot["id"] for lot in p}
+        res_lots = [l for l in res_lots if l["id"] not in placed_ids]
+        total_placed += len(p)
+    print(f"  residential    : {total_placed}/200 lots placed")
+
+    return placed_all
+
+
+# ---------------------------------------------------------------------------
+# Heightmap (HMAP section)
 # ---------------------------------------------------------------------------
 
 def build_heightmap(cfg: dict) -> list[list[int]]:
-    hm   = cfg["terrain_shape"]["heightmap"]
-    sea  = hm["sea_level"]
-    bch  = hm["beach_level"]
-    pln  = hm["plains_level"]
-    peak = hm["hills_peak"]
-    vdep = hm["valley_depth"]
+    hm    = cfg["terrain_shape"]["heightmap"]
+    sea   = hm["sea_level"]
+    bch   = hm["beach_level"]
+    pln   = hm["plains_level"]
+    peak  = hm["hills_peak"]
+    vdep  = hm["valley_depth"]
     scale = 65535 // 100
 
     grid = [[pln * scale] * TILES for _ in range(TILES)]
 
     beach = cfg["terrain_shape"]["beach"]
-    by0, by1 = beach["tile_y_start"], beach["tile_y_end"]
+    by0 = beach["tile_y_start"]
     for ty in range(by0, TILES):
-        t = (ty - by0) / max(TILES - by0, 1)
+        t   = (ty - by0) / max(TILES - by0, 1)
         val = int((bch + (sea - bch) * t) * scale)
         for tx in range(TILES):
             grid[ty][tx] = val
 
-    fh = cfg["terrain_shape"]["forest_hills"]
+    fh  = cfg["terrain_shape"]["forest_hills"]
     fcx = fh["tile_x"] + fh["tile_w"] // 2
     fcy = fh["tile_y"] + fh["tile_h"] // 2
     for ty in range(fh["tile_y"], fh["tile_y"] + fh["tile_h"]):
         for tx in range(fh["tile_x"], fh["tile_x"] + fh["tile_w"]):
-            dx = (tx - fcx) / (fh["tile_w"] / 2)
-            dy = (ty - fcy) / (fh["tile_h"] / 2)
-            dist = math.sqrt(dx * dx + dy * dy)
-            if dist < 1.0:
-                bump = int(peak * scale * 0.6 * (1 - dist))
-                grid[ty][tx] = min(65535, grid[ty][tx] + bump)
+            if 0 <= ty < TILES and 0 <= tx < TILES:
+                dx   = (tx - fcx) / (fh["tile_w"] / 2)
+                dy   = (ty - fcy) / (fh["tile_h"] / 2)
+                dist = math.sqrt(dx * dx + dy * dy)
+                if dist < 1.0:
+                    bump = int(peak * scale * 0.6 * (1 - dist))
+                    grid[ty][tx] = min(65535, grid[ty][tx] + bump)
 
-    vl = cfg["terrain_shape"]["valley"]
+    vl  = cfg["terrain_shape"]["valley"]
     vcx = vl["tile_x"] + vl["tile_w"] // 2
     vcy = vl["tile_y"] + vl["tile_h"] // 2
     for ty in range(vl["tile_y"], vl["tile_y"] + vl["tile_h"]):
         for tx in range(vl["tile_x"], vl["tile_x"] + vl["tile_w"]):
-            dx = (tx - vcx) / (vl["tile_w"] / 2)
-            dy = (ty - vcy) / (vl["tile_h"] / 2)
-            dist = math.sqrt(dx * dx + dy * dy)
-            if dist < 1.0:
-                dip = int(vdep * scale * (1 - dist))
-                grid[ty][tx] = max(0, grid[ty][tx] - dip)
+            if 0 <= ty < TILES and 0 <= tx < TILES:
+                dx   = (tx - vcx) / (vl["tile_w"] / 2)
+                dy   = (ty - vcy) / (vl["tile_h"] / 2)
+                dist = math.sqrt(dx * dx + dy * dy)
+                if dist < 1.0:
+                    dip = int(vdep * scale * (1 - dist))
+                    grid[ty][tx] = max(0, grid[ty][tx] - dip)
 
     return grid
 
 
 def encode_hmap(hmap: list[list[int]]) -> bytes:
-    """Pack the heightmap as big-endian uint16 row-major."""
     data = bytearray()
     for row in hmap:
         for v in row:
@@ -96,10 +271,10 @@ def encode_hmap(hmap: list[list[int]]) -> bytes:
 
 
 # ---------------------------------------------------------------------------
-# Zone map (ZONE section)  —  empty lot-slot designations, no buildings
+# Zone map (ZONE section)
 # ---------------------------------------------------------------------------
 
-def build_zone_map(cfg: dict, hmap: list[list[int]]) -> list[list[int]]:
+def build_zone_map(cfg: dict, placed_lots: list[dict]) -> list[list[int]]:
     zmap = [[Z_EMPTY] * TILES for _ in range(TILES)]
 
     beach = cfg["terrain_shape"]["beach"]
@@ -110,25 +285,21 @@ def build_zone_map(cfg: dict, hmap: list[list[int]]) -> list[list[int]]:
     fh = cfg["terrain_shape"]["forest_hills"]
     for ty in range(fh["tile_y"], fh["tile_y"] + fh["tile_h"]):
         for tx in range(fh["tile_x"], fh["tile_x"] + fh["tile_w"]):
-            zmap[ty][tx] = Z_FOREST
+            if 0 <= ty < TILES and 0 <= tx < TILES:
+                zmap[ty][tx] = Z_FOREST
 
-    for slot in cfg["lot_slots"].get("residential_low", []):
-        for ty in range(slot["tile_y"], slot["tile_y"] + slot["tile_w"]):
-            for tx in range(slot["tile_x"], slot["tile_x"] + slot["tile_w"]):
+    for lot in placed_lots:
+        code = CATEGORY_CODE.get(lot["category"], Z_EMPTY)
+        for dy in range(lot["h"]):
+            for dx in range(lot["w"]):
+                ty, tx = lot["ty"] + dy, lot["tx"] + dx
                 if 0 <= ty < TILES and 0 <= tx < TILES:
-                    zmap[ty][tx] = Z_RES_LOW
-
-    for slot in cfg["lot_slots"].get("residential_med", []):
-        for ty in range(slot["tile_y"], slot["tile_y"] + slot["tile_h"]):
-            for tx in range(slot["tile_x"], slot["tile_x"] + slot["tile_w"]):
-                if 0 <= ty < TILES and 0 <= tx < TILES:
-                    zmap[ty][tx] = Z_RES_MED
+                    zmap[ty][tx] = code
 
     return zmap
 
 
 def encode_zone(zmap: list[list[int]]) -> bytes:
-    """Pack zone map as one uint8 per tile, row-major."""
     return bytes(v for row in zmap for v in row)
 
 
@@ -140,27 +311,24 @@ ROAD_TYPE_CODES = {"highway": 0x01, "avenue": 0x02, "street": 0x03}
 
 def encode_roads(cfg: dict) -> bytes:
     roads = cfg["roads"]
-    buf = bytearray()
+    buf   = bytearray()
 
     for seg in roads["segments"]:
         code = ROAD_TYPE_CODES.get(seg["type"], 0x02)
         buf += struct.pack(">BBhhhh",
-                           0x01,          # record type: segment
-                           code,
+                           0x01, code,
                            seg["from"][0], seg["from"][1],
                            seg["to"][0],   seg["to"][1])
 
     ra = roads["roundabout"]
     buf += struct.pack(">BBhhB",
-                       0x02,              # record type: roundabout
-                       ra["lanes"],
+                       0x02, ra["lanes"],
                        ra["center_tile"][0], ra["center_tile"][1],
                        ra["radius_tiles"])
 
     br = roads["bridge"]
     buf += struct.pack(">BBhhhh",
-                       0x03,              # record type: bridge
-                       0x01,             # arch type
+                       0x03, 0x01,
                        br["from"][0], br["from"][1],
                        br["to"][0],   br["to"][1])
 
@@ -168,41 +336,59 @@ def encode_roads(cfg: dict) -> bytes:
 
 
 # ---------------------------------------------------------------------------
-# SC4 file writer  —  sectioned binary format
+# SC4 binary writer
 # ---------------------------------------------------------------------------
 
 def _section(tag: bytes, data: bytes) -> bytes:
     assert len(tag) == 4
-    compressed = zlib.compress(data, 6)
-    return (tag
-            + struct.pack(">II", len(data), len(compressed))
-            + compressed)
+    cmp = zlib.compress(data, 6)
+    return tag + struct.pack(">II", len(data), len(cmp)) + cmp
 
 
 def write_sc4(path: str, cfg: dict,
               hmap: list[list[int]],
               zmap: list[list[int]]) -> None:
     name = cfg["terrain_name"].encode("utf-8")
-    header = (
-        b"SC4T"
-        + struct.pack(">HH", 1, 0)               # version 1.0
-        + struct.pack(">B", TILES)               # grid size
-        + struct.pack(">I", len(name)) + name
-    )
-
-    body = (
-        _section(b"HMAP", encode_hmap(hmap))
-        + _section(b"ROAD", encode_roads(cfg))
-        + _section(b"ZONE", encode_zone(zmap))
-    )
-
+    header = (b"SC4T"
+              + struct.pack(">HH", 1, 0)
+              + struct.pack(">B", TILES)
+              + struct.pack(">I", len(name)) + name)
+    body = (_section(b"HMAP", encode_hmap(hmap))
+            + _section(b"ROAD", encode_roads(cfg))
+            + _section(b"ZONE", encode_zone(zmap)))
     with open(path, "wb") as f:
         f.write(header + body)
 
 
 # ---------------------------------------------------------------------------
-# Preview PNG  (stdlib only — no Pillow needed)
+# Preview PNG (stdlib only)
 # ---------------------------------------------------------------------------
+
+ZONE_COLOURS: dict[int, tuple | None] = {
+    Z_URBAN:    (200, 130,  80),   # terra cotta — urban building slot
+    Z_COMM:     (255, 200,  40),   # yellow      — commercial slot
+    Z_SVC:      ( 80, 130, 220),   # blue        — service slot
+    Z_SPORT:    ( 50, 190,  70),   # bright green— sports slot
+    Z_EDU:      (180,  80, 200),   # purple      — education slot
+    Z_RES:      (230, 215, 165),   # light tan   — residential slot
+    Z_SPECIAL:  (220,  60, 160),   # magenta     — special slot
+    Z_BEACH_F:  (245, 230, 140),   # pale sand   — beach facility slot
+    Z_FOREST_F: ( 30,  90,  30),   # dark green  — forest facility slot
+    Z_BRIDGE:   (120,  90,  60),   # brown       — bridge slot
+    Z_ROAD:     ( 50,  50,  50),   # dark gray   — road
+    Z_BEACH:    (240, 220, 155),   # sand        — natural beach
+    Z_FOREST:   ( 40, 110,  40),   # green       — natural forest
+    Z_EMPTY:    None,              # height-based colour
+}
+
+def _height_colour(h_norm: float) -> tuple:
+    if h_norm < 0.13: return ( 65, 105, 225)
+    if h_norm < 0.15: return (135, 170, 210)
+    if h_norm < 0.17: return (240, 220, 160)
+    if h_norm < 0.35: return (100, 155,  70)
+    if h_norm < 0.60: return ( 75, 120,  55)
+    return                   (130, 120, 100)
+
 
 def _png_chunk(name: bytes, data: bytes) -> bytes:
     crc = zlib.crc32(name + data) & 0xFFFFFFFF
@@ -223,17 +409,12 @@ def write_png(path: str, pixels: list[list[tuple]], w: int, h: int) -> None:
         f.write(_png_chunk(b"IEND", b""))
 
 
-def zone_to_rgb(z: int, h_norm: float) -> tuple[int, int, int]:
-    if z == Z_BEACH:   return (240, 220, 160)
-    if z == Z_FOREST:  return ( 40, 100,  40)
-    if z == Z_RES_LOW: return (160, 210, 130)   # pale green = empty residential slot
-    if z == Z_RES_MED: return (120, 180, 100)
-    # undeveloped — shade by height
-    if h_norm < 0.13:  return ( 65, 105, 225)
-    if h_norm < 0.15:  return (135, 170, 210)
-    if h_norm < 0.35:  return (100, 150,  70)
-    if h_norm < 0.60:  return ( 80, 120,  55)
-    return                    (130, 120, 100)
+def _set_px(pixels, px, py, colour, pw: int, ph: int, half: int = 1) -> None:
+    for dy in range(-half, half + 1):
+        for dx in range(-half, half + 1):
+            nx, ny = px + dx, py + dy
+            if 0 <= nx < pw and 0 <= ny < ph:
+                pixels[ny][nx] = colour
 
 
 def _line_tiles(x0, y0, x1, y1):
@@ -249,43 +430,41 @@ def generate_preview(cfg: dict,
     pw = cfg["preview"]["width"]
     ph = cfg["preview"]["height"]
 
-    def tx(tile_x): return int(tile_x / TILES * pw)
-    def ty(tile_y): return int(tile_y / TILES * ph)
+    def px(tx): return int(tx / TILES * pw)
+    def py(ty): return int(ty / TILES * ph)
 
-    def set_px(pixels, px, py, colour, half=1):
-        for dy in range(-half, half + 1):
-            for dx in range(-half, half + 1):
-                nx, ny = px + dx, py + dy
-                if 0 <= nx < pw and 0 <= ny < ph:
-                    pixels[ny][nx] = colour
+    pixels = []
+    for y in range(ph):
+        row = []
+        for x in range(pw):
+            ttx = min(int(x / pw * TILES), TILES - 1)
+            tty = min(int(y / ph * TILES), TILES - 1)
+            z   = zmap[tty][ttx]
+            c   = ZONE_COLOURS.get(z)
+            if c is None:
+                c = _height_colour(hmap[tty][ttx] / 65535)
+            row.append(c)
+        pixels.append(row)
 
-    pixels = [
-        [zone_to_rgb(zmap[int(y / ph * TILES)][int(x / pw * TILES)],
-                     hmap[int(y / ph * TILES)][int(x / pw * TILES)] / 65535)
-         for x in range(pw)]
-        for y in range(ph)
-    ]
-
-    road_colour   = (50, 50, 50)
-    bridge_colour = (120, 90, 60)
+    road_c   = (50, 50, 50)
+    bridge_c = (140, 100, 60)
 
     for seg in cfg["roads"]["segments"]:
         for ttx, tty in _line_tiles(*seg["from"], *seg["to"]):
-            set_px(pixels, tx(ttx), ty(tty), road_colour)
+            _set_px(pixels, px(ttx), py(tty), road_c, pw, ph, 0)
 
     ra = cfg["roads"]["roundabout"]
     cx, cy, r = ra["center_tile"][0], ra["center_tile"][1], ra["radius_tiles"]
     for deg in range(0, 360, 2):
-        a  = math.radians(deg)
-        rx = int(cx + r * math.cos(a))
-        ry = int(cy + r * math.sin(a))
-        set_px(pixels, tx(rx), ty(ry), road_colour, 0)
+        a = math.radians(deg)
+        _set_px(pixels, px(int(cx + r * math.cos(a))),
+                py(int(cy + r * math.sin(a))), road_c, pw, ph, 0)
 
     br = cfg["roads"]["bridge"]
     for ttx, tty in _line_tiles(*br["from"], *br["to"]):
-        set_px(pixels, tx(ttx), ty(tty), bridge_colour, 0)
+        _set_px(pixels, px(ttx), py(tty), bridge_c, pw, ph, 0)
 
-    out = Path(__file__).parent / "terrains" / "previews" / cfg["preview"]["filename"]
+    out = ROOT / "terrains" / "previews" / cfg["preview"]["filename"]
     write_png(str(out), pixels, pw, ph)
     return str(out)
 
@@ -295,26 +474,37 @@ def generate_preview(cfg: dict,
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    cfg  = load_config()
-    hmap = build_heightmap(cfg)
-    zmap = build_zone_map(cfg, hmap)
+    cfg     = load_config()
+    catalog = load_catalog()
 
-    sc4_path = Path(__file__).parent / cfg["sc4_output"]
+    print("Expanding catalog …")
+    all_lots = expand_catalog(catalog)
+    print(f"  {len(all_lots)} lots total")
+
+    print("Placing lots …")
+    placed = place_all_lots(cfg, all_lots)
+    print(f"  {len(placed)} lots placed")
+
+    with open(PLACEMENTS_PATH, "w") as f:
+        json.dump({"total": len(placed), "lots": placed}, f, indent=2, ensure_ascii=False)
+    print(f"[OK] Placements   -> {PLACEMENTS_PATH}")
+
+    hmap = build_heightmap(cfg)
+    zmap = build_zone_map(cfg, placed)
+
+    sc4_path = ROOT / cfg["sc4_output"]
     sc4_path.parent.mkdir(parents=True, exist_ok=True)
     write_sc4(str(sc4_path), cfg, hmap, zmap)
     print(f"[OK] SC4 terrain  -> {sc4_path}")
-    print(f"     Sections: HMAP ({TILES}x{TILES} uint16) | ROAD | ZONE ({TILES}x{TILES} uint8)")
-    print(f"     No buildings encoded — lot slots are empty zone designations only.")
+    print(f"     Sections: HMAP ({TILES}×{TILES} uint16) | ROAD | ZONE ({TILES}×{TILES} uint8)")
+    print(f"     No buildings — zone tiles are empty lot-slot designations only.")
 
     preview_path = generate_preview(cfg, hmap, zmap)
     print(f"[OK] Preview PNG  -> {preview_path}")
 
-    print()
     target = Path.home() / cfg["sims2_target_dir"]
-    print("To install, copy both files to Sims 2:")
-    print(f"  {sc4_path}")
-    print(f"  {preview_path}")
-    print(f"  -> '{target}/'")
+    print(f"\nInstall: cp {sc4_path} '{target}/'")
+    print(f"         cp {preview_path} '{target}/'")
 
 
 if __name__ == "__main__":
