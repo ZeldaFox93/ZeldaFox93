@@ -1,0 +1,61 @@
+{
+  "terrain_name": "ZeldaFox93_Base",
+  "version": "1.0",
+  "description": "SimCity 4 base terrain for Sims 2 import",
+  "dimensions": {
+    "width": 1024,
+    "height": 1024,
+    "tile_size": 16
+  },
+  "preview": {
+    "width": 400,
+    "height": 300,
+    "filename": "ZeldaFox93_Base.png"
+  },
+  "zones": {
+    "residential": [
+      {"x": 100, "y": 100, "width": 200, "height": 150, "density": "low"}
+    ],
+    "beach": [
+      {"x": 0, "y": 800, "width": 1024, "height": 224, "type": "sandy"}
+    ],
+    "forest": [
+      {"x": 700, "y": 50, "width": 280, "height": 400, "density": "dense"}
+    ],
+    "flat": [
+      {"x": 300, "y": 300, "width": 300, "height": 300}
+    ],
+    "valley": [
+      {"x": 400, "y": 500, "width": 200, "height": 150, "depth": 30}
+    ]
+  },
+  "roads": {
+    "roundabout": {
+      "center_x": 512,
+      "center_y": 400,
+      "radius": 80,
+      "lanes": 2
+    },
+    "main_roads": [
+      {"from": [512, 0],  "to": [512, 400],  "type": "highway"},
+      {"from": [0, 400],  "to": [512, 400],  "type": "avenue"},
+      {"from": [512, 400],"to": [1024, 400], "type": "avenue"},
+      {"from": [512, 400],"to": [512, 1024], "type": "highway"}
+    ]
+  },
+  "bridge": {
+    "start": [450, 600],
+    "end":   [574, 750],
+    "type": "arch",
+    "height": 20
+  },
+  "heightmap": {
+    "sea_level": 10,
+    "beach_level": 12,
+    "plains_level": 25,
+    "hills_peak": 80,
+    "valley_depth": 5
+  },
+  "sc4_output": "terrains/sc4/ZeldaFox93_Base.sc4",
+  "sims2_target_dir": "Documents/EA Games/The Sims 2/SC4 Terrains"
+}
