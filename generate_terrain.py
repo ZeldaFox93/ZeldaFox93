@@ -22,7 +22,8 @@ ROOT        = Path(__file__).parent
 CONFIG_PATH = ROOT / "terrain_config.json"
 CATALOG_PATH= ROOT / "lots_catalog.json"
 PLACEMENTS_PATH = ROOT / "lot_placements.json"
-TILES = 64
+TILES = 64                   # lot grid (64×64 lots, zone map, road coords)
+TERRAIN_VERTS = TILES * 4 + 1  # 257 — SC4 small city at 4 m/vertex (1024m / 4m + 1)
 
 
 def load_config() -> dict:
@@ -263,13 +264,43 @@ def build_heightmap(cfg: dict) -> list[list[int]]:
     return grid
 
 
+def _bilinear_upsample(hmap: list[list[int]],
+                       target: int) -> list[list[float]]:
+    """
+    Upsample a TILES×TILES uint16 heightmap to target×target float metres
+    using bilinear interpolation.
+
+    SC4 small city = 64 lots × 16 m = 1024 m.
+    At 4 m/vertex: 1024/4 + 1 = 257 vertices → TERRAIN_VERTS = 257.
+    Each source lot covers 4 target vertices (16m / 4m = 4).
+    """
+    src = TILES
+    out = []
+    for vy in range(target):
+        row = []
+        for vx in range(target):
+            # Map vertex to fractional lot coordinate
+            lx = vx / (target - 1) * (src - 1)
+            ly = vy / (target - 1) * (src - 1)
+            x0, y0 = int(lx), int(ly)
+            x1 = min(x0 + 1, src - 1)
+            y1 = min(y0 + 1, src - 1)
+            fx, fy = lx - x0, ly - y0
+            v = (hmap[y0][x0] * (1 - fx) * (1 - fy)
+                 + hmap[y0][x1] * fx       * (1 - fy)
+                 + hmap[y1][x0] * (1 - fx) * fy
+                 + hmap[y1][x1] * fx       * fy)
+            row.append(v / 65535.0 * 250.0)   # uint16 → metres
+        out.append(row)
+    return out
+
+
 def encode_hmap(hmap: list[list[int]]) -> bytes:
-    """Heights as float32 metres, little-endian, row-major (DBPF subfile body)."""
+    """Heights as float32 metres, little-endian, row-major (preview / internal use)."""
     data = bytearray()
     for row in hmap:
         for v in row:
-            metres = v / 65535.0 * 250.0        # 0 – 250 m range
-            data += struct.pack("<f", metres)
+            data += struct.pack("<f", v / 65535.0 * 250.0)
     return bytes(data)
 
 
@@ -404,22 +435,39 @@ def _dbpf_entry(type_id: int, group_id: int, inst_id: int,
 
 
 def _sc4_city_subfile(cfg: dict) -> bytes:
-    """City header: version + grid dims + name."""
+    """
+    City header subfile.
+    version · lot_w · lot_h · size_type · name_len · name
+    size_type 0 = small (64×64 lots) — the only size Sims 2 accepts.
+    """
     name = cfg["terrain_name"].encode("utf-8")
-    return struct.pack("<IIII", 1, TILES, TILES, len(name)) + name
+    return struct.pack("<IIIII",
+                       1,      # subfile version
+                       TILES,  # width  in lots (64 → small city)
+                       TILES,  # height in lots (64 → small city)
+                       0,      # size_type: 0 = small
+                       len(name)) + name
 
 
 def _sc4_terrain_subfile(hmap: list[list[int]]) -> bytes:
-    """Terrain heights: version + dims + float32[TILES*TILES] in metres."""
-    buf = struct.pack("<III", 1, TILES, TILES)
-    for row in hmap:
+    """
+    Terrain heightmap at 4 m/vertex — the correct resolution for an SC4 small city.
+
+    SC4 small city = 64 lots × 16 m = 1024 m per side.
+    Vertex spacing = 4 m  →  1024 / 4 + 1 = 257 vertices per side.
+
+    Format: version(u32) · width(u32) · height(u32) · float32[257×257] metres LE.
+    """
+    verts = _bilinear_upsample(hmap, TERRAIN_VERTS)   # 64×64 → 257×257
+    buf   = struct.pack("<III", 1, TERRAIN_VERTS, TERRAIN_VERTS)
+    for row in verts:
         for v in row:
-            buf += struct.pack("<f", v / 65535.0 * 250.0)
+            buf += struct.pack("<f", v)
     return buf
 
 
 def _sc4_zone_subfile(zmap: list[list[int]]) -> bytes:
-    """Zone map: version + dims + uint8[TILES*TILES] zone codes."""
+    """Zone map: version · lot_w · lot_h · uint8[64×64] codes (one per lot)."""
     return struct.pack("<III", 1, TILES, TILES) + bytes(
         v for row in zmap for v in row)
 
@@ -592,8 +640,9 @@ def main() -> None:
     sc4_path.parent.mkdir(parents=True, exist_ok=True)
     write_sc4(str(sc4_path), cfg, hmap, zmap)
     print(f"[OK] SC4 terrain  -> {sc4_path}")
-    print(f"     Sections: HMAP ({TILES}×{TILES} uint16) | ROAD | ZONE ({TILES}×{TILES} uint8)")
-    print(f"     No buildings — zone tiles are empty lot-slot designations only.")
+    print(f"     TERRAIN_MAP : {TERRAIN_VERTS}×{TERRAIN_VERTS} float32 vertices (4 m/vertex, small city)")
+    print(f"     ZONE_MAP    : {TILES}×{TILES} uint8 lot codes | ROAD_NET : road segments")
+    print(f"     size_type=0 (small city, 64×64 lots, 1024 m × 1024 m)")
 
     preview_path = generate_preview(cfg, hmap, zmap)
     print(f"[OK] Preview PNG  -> {preview_path}")
