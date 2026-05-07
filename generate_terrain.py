@@ -14,7 +14,6 @@ No buildings, no objects, no lot contents are stored.
 import json
 import math
 import struct
-import time
 import zlib
 from pathlib import Path
 
@@ -507,7 +506,7 @@ def write_sc4(path: str, cfg: dict,
               hmap: list[list[int]],
               zmap: list[list[int]]) -> None:
     """Write a valid DBPF 1.0 SC4 terrain file readable by The Sims 2."""
-    ts = int(time.time())
+    ts = 0  # DBPF timestamps unused by Sims 2; zeroing avoids spurious git diffs
 
     subfiles = [
         (REGION_VIEW_TYPE, REGION_VIEW_GROUP, REGION_VIEW_INST, _region_view_subfile(cfg)),
