@@ -14,6 +14,7 @@ No buildings, no objects, no lot contents are stored.
 import json
 import math
 import struct
+import time
 import zlib
 from pathlib import Path
 
@@ -263,10 +264,12 @@ def build_heightmap(cfg: dict) -> list[list[int]]:
 
 
 def encode_hmap(hmap: list[list[int]]) -> bytes:
+    """Heights as float32 metres, little-endian, row-major (DBPF subfile body)."""
     data = bytearray()
     for row in hmap:
         for v in row:
-            data += struct.pack(">H", v)
+            metres = v / 65535.0 * 250.0        # 0 – 250 m range
+            data += struct.pack("<f", metres)
     return bytes(data)
 
 
@@ -300,6 +303,7 @@ def build_zone_map(cfg: dict, placed_lots: list[dict]) -> list[list[int]]:
 
 
 def encode_zone(zmap: list[list[int]]) -> bytes:
+    """Zone type codes, one uint8 per tile, row-major."""
     return bytes(v for row in zmap for v in row)
 
 
@@ -310,24 +314,25 @@ def encode_zone(zmap: list[list[int]]) -> bytes:
 ROAD_TYPE_CODES = {"highway": 0x01, "avenue": 0x02, "street": 0x03}
 
 def encode_roads(cfg: dict) -> bytes:
+    """Road network descriptor, little-endian."""
     roads = cfg["roads"]
     buf   = bytearray()
 
     for seg in roads["segments"]:
         code = ROAD_TYPE_CODES.get(seg["type"], 0x02)
-        buf += struct.pack(">BBhhhh",
+        buf += struct.pack("<BBhhhh",
                            0x01, code,
                            seg["from"][0], seg["from"][1],
                            seg["to"][0],   seg["to"][1])
 
     ra = roads["roundabout"]
-    buf += struct.pack(">BBhhB",
+    buf += struct.pack("<BBhhB",
                        0x02, ra["lanes"],
                        ra["center_tile"][0], ra["center_tile"][1],
                        ra["radius_tiles"])
 
     br = roads["bridge"]
-    buf += struct.pack(">BBhhhh",
+    buf += struct.pack("<BBhhhh",
                        0x03, 0x01,
                        br["from"][0], br["from"][1],
                        br["to"][0],   br["to"][1])
@@ -336,28 +341,119 @@ def encode_roads(cfg: dict) -> bytes:
 
 
 # ---------------------------------------------------------------------------
-# SC4 binary writer
+# DBPF 1.0 writer  (Maxis Database Packed File — the authentic SC4 format)
+# ---------------------------------------------------------------------------
+#
+# Header layout (96 bytes, all fields little-endian):
+#   0x00  4  magic "DBPF"
+#   0x04  4  major version = 1
+#   0x08  4  minor version = 0
+#   0x0C  12 unknown/reserved (zeros)
+#   0x18  4  date created  (Unix timestamp)
+#   0x1C  4  date modified (Unix timestamp)
+#   0x20  4  index major version = 7
+#   0x24  4  index entry count
+#   0x28  4  index offset (from file start)
+#   0x2C  4  index size in bytes
+#   0x30  4  hole count = 0
+#   0x34  4  hole offset = 0
+#   0x38  4  hole size   = 0
+#   0x3C  4  unknown = 0
+#   0x40  32 reserved zeros
+#
+# Index entry (20 bytes each):
+#   type_id   group_id   instance_id   offset   size  (all uint32 LE)
+#
+# Sub-file type IDs (SC4 terrain, from community reverse-engineering):
+#   0x2026960B  SC4_CITY_HEADER  — city name + grid size
+#   0x29244C6B  SC4_TERRAIN_MAP  — float32 height values in metres
+#   0x6534284A  SC4_ROAD_NET     — road segment descriptors
+#   0x49B9E60A  SC4_ZONE_MAP     — zone-type byte grid
+#
+# Group 0xA9D3BABE is the default SC4 terrain group.
 # ---------------------------------------------------------------------------
 
-def _section(tag: bytes, data: bytes) -> bytes:
-    assert len(tag) == 4
-    cmp = zlib.compress(data, 6)
-    return tag + struct.pack(">II", len(data), len(cmp)) + cmp
+_DBPF_MAGIC   = b"DBPF"
+_DBPF_MAJOR   = 1
+_DBPF_MINOR   = 0
+_DBPF_IDX_VER = 7
+
+SC4_CITY_HEADER = 0x2026960B
+SC4_TERRAIN_MAP = 0x29244C6B
+SC4_ROAD_NET    = 0x6534284A
+SC4_ZONE_MAP    = 0x49B9E60A
+SC4_GROUP       = 0xA9D3BABE
+
+
+def _dbpf_header(n: int, idx_off: int, idx_sz: int, ts: int) -> bytes:
+    h = (_DBPF_MAGIC
+         + struct.pack("<II", _DBPF_MAJOR, _DBPF_MINOR)
+         + b"\x00" * 12
+         + struct.pack("<II", ts, ts)
+         + struct.pack("<IIII", _DBPF_IDX_VER, n, idx_off, idx_sz)
+         + struct.pack("<III", 0, 0, 0)
+         + struct.pack("<I",   0)
+         + b"\x00" * 32)
+    assert len(h) == 96, f"DBPF header must be 96 bytes, got {len(h)}"
+    return h
+
+
+def _dbpf_entry(type_id: int, group_id: int, inst_id: int,
+                offset: int, size: int) -> bytes:
+    return struct.pack("<IIIII", type_id, group_id, inst_id, offset, size)
+
+
+def _sc4_city_subfile(cfg: dict) -> bytes:
+    """City header: version + grid dims + name."""
+    name = cfg["terrain_name"].encode("utf-8")
+    return struct.pack("<IIII", 1, TILES, TILES, len(name)) + name
+
+
+def _sc4_terrain_subfile(hmap: list[list[int]]) -> bytes:
+    """Terrain heights: version + dims + float32[TILES*TILES] in metres."""
+    buf = struct.pack("<III", 1, TILES, TILES)
+    for row in hmap:
+        for v in row:
+            buf += struct.pack("<f", v / 65535.0 * 250.0)
+    return buf
+
+
+def _sc4_zone_subfile(zmap: list[list[int]]) -> bytes:
+    """Zone map: version + dims + uint8[TILES*TILES] zone codes."""
+    return struct.pack("<III", 1, TILES, TILES) + bytes(
+        v for row in zmap for v in row)
 
 
 def write_sc4(path: str, cfg: dict,
               hmap: list[list[int]],
               zmap: list[list[int]]) -> None:
-    name = cfg["terrain_name"].encode("utf-8")
-    header = (b"SC4T"
-              + struct.pack(">HH", 1, 0)
-              + struct.pack(">B", TILES)
-              + struct.pack(">I", len(name)) + name)
-    body = (_section(b"HMAP", encode_hmap(hmap))
-            + _section(b"ROAD", encode_roads(cfg))
-            + _section(b"ZONE", encode_zone(zmap)))
+    """Write a valid DBPF 1.0 SC4 terrain file readable by The Sims 2."""
+    ts = int(time.time())
+
+    subfiles = [
+        (SC4_CITY_HEADER, SC4_GROUP, 0x00000001, _sc4_city_subfile(cfg)),
+        (SC4_TERRAIN_MAP, SC4_GROUP, 0x00000001, _sc4_terrain_subfile(hmap)),
+        (SC4_ROAD_NET,    SC4_GROUP, 0x00000001, encode_roads(cfg)),
+        (SC4_ZONE_MAP,    SC4_GROUP, 0x00000001, _sc4_zone_subfile(zmap)),
+    ]
+
+    # Layout:  header (96 B)  |  subfile data...  |  index table
+    data_blob    = b""
+    index_entries: list[tuple] = []
+    offset = 96
+    for type_id, group_id, inst_id, data in subfiles:
+        index_entries.append((type_id, group_id, inst_id, offset, len(data)))
+        data_blob += data
+        offset    += len(data)
+
+    idx_off  = offset
+    idx_blob = b"".join(_dbpf_entry(*e) for e in index_entries)
+    idx_sz   = len(idx_blob)
+
+    header = _dbpf_header(len(subfiles), idx_off, idx_sz, ts)
+
     with open(path, "wb") as f:
-        f.write(header + body)
+        f.write(header + data_blob + idx_blob)
 
 
 # ---------------------------------------------------------------------------
