@@ -394,13 +394,15 @@ def encode_roads(cfg: dict) -> bytes:
 # Index entry (20 bytes each):
 #   type_id   group_id   instance_id   offset   size  (all uint32 LE)
 #
-# Sub-file type IDs (SC4 terrain, from community reverse-engineering):
-#   0x2026960B  SC4_CITY_HEADER  — city name + grid size
-#   0x29244C6B  SC4_TERRAIN_MAP  — float32 height values in metres
-#   0x6534284A  SC4_ROAD_NET     — road segment descriptors
-#   0x49B9E60A  SC4_ZONE_MAP     — zone-type byte grid
+# Sub-file type IDs (SC4 native format, confirmed from SC4Mapper-2013 real files):
+#   0xCA027EDB  REGION_VIEW_SUBFILE — city metadata incl. CitySizeX (group CA027EE1)
+#   0xA9DD6FF4  SC4_TERRAIN_MAP     — uint16(2)+float32[N×N] heights (group E98F9525)
+#   0x6534284A  SC4_ROAD_NET        — road segment descriptors (group 299B2D1B)
+#   0x49B9E60A  SC4_ZONE_MAP        — zone-type byte grid      (group 299B2D1B)
 #
-# Group 0xA9D3BABE is the default SC4 terrain group.
+# Decompressed sizes from real SC4Mapper-2013 files:
+#   Small (65×65):  16902 = 2 + 65×65×4  bytes
+#   Medium (129×129): 66566 = 2 + 129×129×4  bytes
 # ---------------------------------------------------------------------------
 
 _DBPF_MAGIC   = b"DBPF"
@@ -408,15 +410,20 @@ _DBPF_MAJOR   = 1
 _DBPF_MINOR   = 0
 _DBPF_IDX_VER = 7
 
-# RegionViewSubfile TGI (SC4Parser-documented, CA027EDB/CA027EE1/00000000)
+# RegionViewSubfile TGI (CA027EDB/CA027EE1/00000000)
 REGION_VIEW_TYPE  = 0xCA027EDB
 REGION_VIEW_GROUP = 0xCA027EE1
 REGION_VIEW_INST  = 0x00000000
 
-# TerrainMapSubfile TGI — 0x29244C6B is the TGI Sims 2 actually reads
-# (confirmed: 257×257 at this TGI → Large City; 65×65 → Small City)
-SC4_TERRAIN_MAP = 0x29244C6B
-SC4_GROUP       = 0xA9D3BABE
+# TerrainMapSubfile TGI — SC4 native format proven by real SC4 files:
+#   Small.sc4 decomp = 16902 = 2 + 65×65×4  (uint16 header, no inline dims)
+#   Medium.sc4 decomp = 66566 = 2 + 129×129×4
+# Previous attempt with this TGI used wrong group (A9D3BABE) + wrong format.
+SC4_TERRAIN_MAP   = 0xA9DD6FF4
+SC4_TERRAIN_GROUP = 0xE98F9525  # correct group for TerrainMapSubfile
+
+# SC4 data-subfile group (used by road network and zone map)
+SC4_DATA_GROUP  = 0x299B2D1B
 
 SC4_ROAD_NET  = 0x6534284A
 SC4_ZONE_MAP  = 0x49B9E60A
@@ -479,18 +486,19 @@ def _region_view_subfile(cfg: dict) -> bytes:
 
 def _sc4_terrain_subfile(hmap: list[list[int]]) -> bytes:
     """
-    TerrainMapSubfile at TGI 0x29244C6B / 0xA9D3BABE.
+    TerrainMapSubfile at TGI A9DD6FF4/E98F9525/00000001 (SC4 native format).
 
-    Sims 2 reads this TGI and extracts city size from the explicit width/height
-    fields: TERRAIN_VERTS=65 → 65-1=64 lots per side → Small City.
-
-    Format: version(u32) · width(u32) · height(u32) · float32[width×height] row-major.
+    Format proven by real SC4 files (SC4Mapper-2013):
+      uint16(2)            — version, NO inline width/height
+      float32[N×N]         — heights in SC4 units (metres × 10)
+    N = TERRAIN_VERTS = 65.  Total = 2 + 65×65×4 = 16902 bytes (matches Small.sc4).
+    Dimensions are implicit; Sims 2 derives them from RegionViewSubfile.CitySizeX.
     """
     verts = _bilinear_upsample(hmap, TERRAIN_VERTS)   # 64×64 → 65×65
-    buf   = struct.pack("<III", 1, TERRAIN_VERTS, TERRAIN_VERTS)
+    buf   = struct.pack("<H", 2)                       # uint16 version = 2
     for row in verts:
         for v in row:
-            buf += struct.pack("<f", v)
+            buf += struct.pack("<f", v * 10.0)         # metres → SC4 units (×10)
     return buf
 
 
@@ -507,10 +515,10 @@ def write_sc4(path: str, cfg: dict,
     ts = 0  # DBPF timestamps unused by Sims 2; zeroing avoids spurious git diffs
 
     subfiles = [
-        (REGION_VIEW_TYPE, REGION_VIEW_GROUP, REGION_VIEW_INST, _region_view_subfile(cfg)),
-        (SC4_TERRAIN_MAP,  SC4_GROUP,         0x00000001,        _sc4_terrain_subfile(hmap)),
-        (SC4_ROAD_NET,     SC4_GROUP,         0x00000001,        encode_roads(cfg)),
-        (SC4_ZONE_MAP,     SC4_GROUP,         0x00000001,        _sc4_zone_subfile(zmap)),
+        (REGION_VIEW_TYPE,  REGION_VIEW_GROUP,  REGION_VIEW_INST,  _region_view_subfile(cfg)),
+        (SC4_TERRAIN_MAP,   SC4_TERRAIN_GROUP,  0x00000001,         _sc4_terrain_subfile(hmap)),
+        (SC4_ROAD_NET,      SC4_DATA_GROUP,     0x00000001,         encode_roads(cfg)),
+        (SC4_ZONE_MAP,      SC4_DATA_GROUP,     0x00000000,         _sc4_zone_subfile(zmap)),
     ]
 
     # Layout:  header (96 B)  |  subfile data...  |  index table
@@ -668,10 +676,10 @@ def main() -> None:
     sc4_path.parent.mkdir(parents=True, exist_ok=True)
     write_sc4(str(sc4_path), cfg, hmap, zmap)
     print(f"[OK] SC4 terrain  -> {sc4_path}")
-    print(f"     REGION_VIEW : CitySizeX=64 CitySizeY=64 (raw=1×64, small city)")
-    print(f"     TERRAIN_MAP : {TERRAIN_VERTS}×{TERRAIN_VERTS} (TGI 0x29244C6B, explicit dims, small city)")
-    print(f"     ZONE_MAP    : {TILES}×{TILES} uint8 lot codes | ROAD_NET : road segments")
-    print(f"     size_type=0 (small city, 64×64 lots, 1024 m × 1024 m)")
+    print(f"     REGION_VIEW : CitySizeX=1 (×64=64 lots, small city) | TGI CA027EDB/CA027EE1")
+    print(f"     TERRAIN_MAP : {TERRAIN_VERTS}×{TERRAIN_VERTS} floats | TGI A9DD6FF4/E98F9525 | uint16(2)+float32[] fmt")
+    print(f"     ZONE_MAP    : {TILES}×{TILES} uint8 | ROAD_NET : road segments")
+    print(f"     size_type=Small (64×64 lots, 1024m×1024m)")
 
     preview_path = generate_preview(cfg, hmap, zmap)
     print(f"[OK] Preview PNG  -> {preview_path}")
