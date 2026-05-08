@@ -408,18 +408,18 @@ _DBPF_MAJOR   = 1
 _DBPF_MINOR   = 0
 _DBPF_IDX_VER = 7
 
-# Real SC4 TGI values (from SC4Parser reverse-engineering of Maxis save files)
-REGION_VIEW_TYPE  = 0xCA027EDB   # RegionViewSubfile — stores CitySizeX/Y
+# RegionViewSubfile TGI (SC4Parser-documented, CA027EDB/CA027EE1/00000000)
+REGION_VIEW_TYPE  = 0xCA027EDB
 REGION_VIEW_GROUP = 0xCA027EE1
 REGION_VIEW_INST  = 0x00000000
 
-TERRAIN_MAP_TYPE  = 0xA9DD6FF4   # TerrainMapSubfile — float32 heights, no dims stored
-TERRAIN_MAP_GROUP = 0xE98F9525
-TERRAIN_MAP_INST  = 0x00000001
-
-SC4_ROAD_NET    = 0x6534284A    # kept as-is (supplemental metadata)
-SC4_ZONE_MAP    = 0x49B9E60A
+# TerrainMapSubfile TGI — 0x29244C6B is the TGI Sims 2 actually reads
+# (confirmed: 257×257 at this TGI → Large City; 65×65 → Small City)
+SC4_TERRAIN_MAP = 0x29244C6B
 SC4_GROUP       = 0xA9D3BABE
+
+SC4_ROAD_NET  = 0x6534284A
+SC4_ZONE_MAP  = 0x49B9E60A
 
 
 def _dbpf_header(n: int, idx_off: int, idx_sz: int, ts: int) -> bytes:
@@ -479,21 +479,19 @@ def _region_view_subfile(cfg: dict) -> bytes:
 
 def _sc4_terrain_subfile(hmap: list[list[int]]) -> bytes:
     """
-    TerrainMapSubfile (TGI A9DD6FF4/E98F9525/00000001).
+    TerrainMapSubfile at TGI 0x29244C6B / 0xA9D3BABE.
 
-    Format: uint16(MajorVersion) + float32[SizeX × SizeY] in X-major order.
-    Dimensions are NOT stored in the file — Sims 2 derives them from RegionViewSubfile
-    (CitySizeX=64 → SizeX = 64+1 = 65 vertices per side).
+    Sims 2 reads this TGI and extracts city size from the explicit width/height
+    fields: TERRAIN_VERTS=65 → 65-1=64 lots per side → Small City.
+
+    Format: version(u32) · width(u32) · height(u32) · float32[width×height] row-major.
     """
-    verts = _bilinear_upsample(hmap, TERRAIN_VERTS)  # 64×64 → 65×65
-    buf   = bytearray(struct.pack("<H", 1))           # MajorVersion = 1  (uint16)
-
-    # X-major order: outer loop X, inner loop Y (matches SC4Parser TerrainMapSubfile.Parse)
-    for x in range(TERRAIN_VERTS):
-        for y in range(TERRAIN_VERTS):
-            buf += struct.pack("<f", verts[y][x])     # verts[row=y][col=x]
-
-    return bytes(buf)
+    verts = _bilinear_upsample(hmap, TERRAIN_VERTS)   # 64×64 → 65×65
+    buf   = struct.pack("<III", 1, TERRAIN_VERTS, TERRAIN_VERTS)
+    for row in verts:
+        for v in row:
+            buf += struct.pack("<f", v)
+    return buf
 
 
 def _sc4_zone_subfile(zmap: list[list[int]]) -> bytes:
@@ -510,7 +508,7 @@ def write_sc4(path: str, cfg: dict,
 
     subfiles = [
         (REGION_VIEW_TYPE, REGION_VIEW_GROUP, REGION_VIEW_INST, _region_view_subfile(cfg)),
-        (TERRAIN_MAP_TYPE, TERRAIN_MAP_GROUP, TERRAIN_MAP_INST, _sc4_terrain_subfile(hmap)),
+        (SC4_TERRAIN_MAP,  SC4_GROUP,         0x00000001,        _sc4_terrain_subfile(hmap)),
         (SC4_ROAD_NET,     SC4_GROUP,         0x00000001,        encode_roads(cfg)),
         (SC4_ZONE_MAP,     SC4_GROUP,         0x00000001,        _sc4_zone_subfile(zmap)),
     ]
@@ -671,7 +669,7 @@ def main() -> None:
     write_sc4(str(sc4_path), cfg, hmap, zmap)
     print(f"[OK] SC4 terrain  -> {sc4_path}")
     print(f"     REGION_VIEW : CitySizeX=64 CitySizeY=64 (raw=1×64, small city)")
-    print(f"     TERRAIN_MAP : {TERRAIN_VERTS}×{TERRAIN_VERTS} float32 vertices (16 m/vertex, small city)")
+    print(f"     TERRAIN_MAP : {TERRAIN_VERTS}×{TERRAIN_VERTS} (TGI 0x29244C6B, explicit dims, small city)")
     print(f"     ZONE_MAP    : {TILES}×{TILES} uint8 lot codes | ROAD_NET : road segments")
     print(f"     size_type=0 (small city, 64×64 lots, 1024 m × 1024 m)")
 
